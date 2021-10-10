@@ -18,19 +18,17 @@ markdown: kramdown
 kramdown:
   parse_block_html: true
 
-baseurl: "/CaTRoX_QWR/" 
-url: "https://theqwertiest.github.io"
+baseurl: "/CaTRoX_Classical/" 
+url: "https://mayanez.github.io"
 
 permalink: pretty
 
-title: CaTRoX (QWR Edition)
+title: CaTRoX (Classical Edition)
 
 aux_links:
   "View on GitHub":
-    - "//github.com/theqwertiest/CaTRoX_QWR"
+    - "//github.com/theqwertiest/CaTRoX_Classical"
 
 color_scheme: "dark"
 
-footer_content: "Copyright &copy; 2021 Yuri Shutenko.<br/>Distributed by an <a href=\"https://github.com/TheQwertiest/CaTRoX_QWR/blob/master/LICENSE\">MIT license.</a>"
-
-ga_tracking: UA-154231909-4
+footer_content: "CaTRoX (Classical Edition)"
