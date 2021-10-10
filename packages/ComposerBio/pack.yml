@@ -1,0 +1,5 @@
+ComposerBio:
+  url: "https://github.com/mayanez/WilB-Biography-Mod/releases/latest/download/SMP-Biography-Mod.zip"
+  additional_files:
+    yttm:
+      - biography-composer.cfg
