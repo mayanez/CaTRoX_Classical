@@ -136,7 +136,21 @@ function TopPanel() {
             var logo_y = Math.floor((this.h - logo_w) / 2);
 
             gr.SetInterpolationMode(InterpolationMode.HighQualityBicubic);
-            gr.DrawImage(fb2k_logo, logo_x, logo_y, logo_w, logo_w, 0, 0, fb2k_logo.Width, fb2k_logo.Height, 0, 175);
+
+            var quality_query = window.GetProperty("quality_query", "$if($strcmp(%codec%,WavPack), DSD$ifequal($info(DSD_SAMPLERATE),2822400,64,)$ifequal($info(DSD_SAMPLERATE),5644800,128,)$ifequal($info(DSD_SAMPLERATE),11289600,256,)$ifequal($info(DSD_SAMPLERATE),22579200,256,),$if($greater($strstr(%codec%,DSD),0),%codec%,$if($strcmp(%codec%,FLAC),$if($greater($info(bitspersample),16),Hi-Res))))");
+            var quality = fb.IsPlaying ? _tfe(quality_query) : metadb ? _tf(quality_query, metadb) : "";
+
+            if (quality.includes(window.GetProperty("hires_audio_match_pattern", "Hi-Res"))) {
+                logo_w = 32;
+                logo_y = Math.floor((this.h - logo_w) / 2);
+                gr.DrawImage(hires_logo, logo_x, logo_y, logo_w, logo_w, 0, 0, hires_logo.Width, hires_logo.Height, 0, 255);
+            } else if (quality.includes(window.GetProperty("dsd_match_pattern", "DSD"))) {
+                logo_w = 32;
+                logo_y = Math.floor((this.h - logo_w) / 4);
+                gr.DrawImage(dsd_logo, logo_x, logo_y, logo_w, logo_w, 0, 0, dsd_logo.Width, dsd_logo.Height, 0, 255);
+            } else {
+                gr.DrawImage(fb2k_logo, logo_x, logo_y, logo_w, logo_w, 0, 0, fb2k_logo.Width, fb2k_logo.Height, 0, 175);
+            }
 
             cur_x = logo_x + logo_w + 5;
         }
@@ -186,7 +200,7 @@ function TopPanel() {
         var cmm = new Context.MainMenu();
 
         cmm.append_item(
-            'Show foobar2000 logo',
+            'Show quality logos',
             function () {
                 g_properties.show_logo = !g_properties.show_logo;
             },
