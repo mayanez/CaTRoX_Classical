@@ -1,0 +1,6 @@
+foo_input_sacd:
+  url: "https://sourceforge.net/projects/sacddecoder/files/foo_input_sacd/foo_input_sacd-1.3.7.zip/download"
+  extract: True
+  components:
+    - foo_input_sacd.fb2k-component
+    - foo_dsd_processor.fb2k-component

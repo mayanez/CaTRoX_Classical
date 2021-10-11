@@ -60,17 +60,36 @@ def handle_additional_files(root_dir, zip_file):
                         for output_file in additional_files:
                             zip_file.write(f'{d}/{output_file}', f'{output_dir}/{output_file}')
 
-def handle_user_components(component_path, output_components_dir):
+def handle_user_components(component_path, output_dir, output_components_dir):
     component_name = os.path.basename(component_path)
+    tmp_dir = output_dir/'_tmp'
+    tmp_dir.mkdir(parents=True, exist_ok=True)
 
     for f in component_path.glob('*'):
         if os.path.basename(f) == PACK_YML:
             with open(f, "r") as ymlfile:
                 data = yaml.load(ymlfile, Loader=yaml.FullLoader)
                 r = requests.get(data[component_name]['url'])
-                with open(f'{output_components_dir}/{component_name}.fb2k-component', 'wb') as out:
-                    out.write(r.content)
+                output_component_file = f'{output_components_dir}/{component_name}.fb2k-component'
+                if 'extract' in data[component_name] and data[component_name]['extract']:
+                    tmp_file = f'{tmp_dir}/{component_name}.zip'
+                    with open(tmp_file, 'wb') as tmp:
+                        tmp.write(r.content)
+
+                    extract_dir = f'{tmp_dir}/{component_name}'
+                    shutil.unpack_archive(tmp_file, extract_dir)
+                    
+                    if 'components' in data[component_name]:
+                        for component in data[component_name]['components']:
+                            shutil.move(f'{extract_dir}/{component}', f'{output_components_dir}/{component}')
+                    else:
+                        shutil.move(f'{extract_dir}/{component_name}.fb2k-component', output_component_file)
+
                     print(f'Downloaded Component: {component_name}')
+                else:
+                    with open(output_component_file, 'wb') as out:
+                        out.write(r.content)
+                        print(f'Downloaded Component: {component_name}')
 
 def pack():
     cur_dir = Path(__file__).parent.absolute()
@@ -99,7 +118,7 @@ def pack():
         handle_package(d, output_packages_dir)
 
     for d in (root_dir/'user-components').glob('*'):
-        handle_user_components(d, output_components_dir)
+        handle_user_components(d, output_dir, output_components_dir)
 
     with ZipFile(output_zip, 'w', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as z:
         zipdir(z, output_packages_dir, 'packages')
