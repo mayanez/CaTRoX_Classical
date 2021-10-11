@@ -148,7 +148,7 @@ function TopPanel() {
             var info_w = this.w - (cur_x - this.x) - (10 + right_pad);
             var info_h = this.h;
 
-            var info_query = "[%tracknumber%. ][%title%] ['('%length%')'][  \u25AA  %album artist%][  \u25AA  %album%]";
+            var info_query = window.GetProperty("info_query", "[%tracknumber%. ][%title%] ['('%length%')'][ • %album artist%][ • %album%]");
             var info_text = (fb.IsPlaying ? _tfe(info_query) : _tf(info_query, metadb));
 
             var info_format = StringFormat();
